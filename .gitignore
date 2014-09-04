@@ -15,7 +15,18 @@
 *.a
 *.lib
 
+# Root files
+*.root
+babyTuples/
+
 # Executables
 *.exe
 *.out
 *.app
+*.run
+
+# Logs
+*.log
+
+# Crap
+*~

@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+
+<!--
+	#################################################
+	#            Analysis configuration             #
+	#################################################
+-->
+
+<Analysis>
+<!--
+	DataType = [ 0: MC ; 1: Data ; 2 : Data & MC ]
+	Luminosity in in pb-1
+-->
+<!--a type="General" Verbosity="3" DataType="0" Luminosity="38.35"/>
+<a type="General" Verbosity="3" DataType="0" Luminosity="204.2" LumiError="12." PUWeightFile="/opt/sbg/data/data1/cms/echabert/TopDilep/CMSSW_4_1_4/src/MiniTreeAnalysis/NTupleAnalysis/macros/pudist_200pb.root" />
+-->
+<!--a 						
+   type="General" 
+   Verbosity="3" 
+   DataType="0" 
+   Luminosity="2288.8" 
+   LumiError="2284.1" 
+/-->
+
+<!-- WARNING WARNING WARNING - Don't forget to use the good PU file !! S7 for signal (fastsim), S10 for background (fullsim) ! -->
+
+<!--a
+    type="Corrections"
+    pileUp="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/TTbarMET/inputs/pileUp/puWeights_S7.root"
+    bTagReshaping="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/TTbarMET/inputs/bTagReshaping/bTagReshaping.root"
+    jetEnergyCorrectionMC="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/TTbarMET/inputs/JEC/Fall12_Uncertainty_MC_AK5PF.txt"
+    jetEnergyCorrectionData="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/TTbarMET/inputs/JEC/Fall12_Uncertainty_Data_AK5PF.txt"
+/-->
+
+</Analysis>
+
+
+
+<!--
+	#################################################
+	#            Datasets configuration             #
+	#################################################
+-->
+
+<Datasets>
+<!-- 
+     add = 1 : run on the sample
+     add = 0 : do not run on the sample
+     isData = 1 for data; = 0  for MC
+
+-->
+<d  name="NTuple_53X_DYJetsToLL_M-10To50" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_DYJetsToLL_M-10To50.root" />
+<!-- 
+<d  name="testSync" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/Single*_B/NTuple_*.root" />
+-->
+
+<!-- Signals -->
+<!--
+<d  name="T2bw-025_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_withLSP0/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_withLSP0/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_withLSP0/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-075_*/*.root" />
+
+<d  name="T2tt_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_withLSP0/*/*.root" />
+<d  name="T2tt_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_noLSP0/*/*.root" />
+<d  name="T2tt_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_mLSP1/*/*.root" />
+-->
+<!-- ttbar -->
+
+<!--d  name="ttbar" add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar-v*/*.root" /-->
+<!--
+-->
+<!--
+<d  name="ttbar_madgraph_1l"           add="1" isData="0" NofEvts="-1" normf="1" xsection="103.5"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_1l/*.root" />
+<d  name="ttbar_madgraph_2l"           add="1" isData="0" NofEvts="-1" normf="1" xsection="25.5"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_2l/*.root" />
+<d  name="ttbar_madgraph_mass166-5"    add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_mass166-5/*.root" />
+<d  name="ttbar_madgraph_mass178-5"    add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_mass178-5/*.root" />
+<d  name="ttbar_madgraph_matchingdown" add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_matchingdown/*.root" />
+<d  name="ttbar_madgraph_matchingup"   add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_matchingup/*.root" />
+<d  name="ttbar_madgraph_scaledown"    add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_scaledown/*.root" />
+<d  name="ttbar_madgraph_scaleup"      add="1" isData="0" NofEvts="-1" normf="1" xsection="234.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ttbar_madgraph_scaleup/*.root" />
+-->
+
+<!-- W+jets -->
+<!--
+<d  name="W1jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="6663.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/W1jets/*.root" />
+<d  name="W2jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="2159.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/W2jets/*.root" />
+<d  name="W3jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="640.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/W3jets/*.root" />
+<d  name="W4jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="264.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/W4jets/*.root" />
+-->
+<!-- DY+jets -->
+
+<!--
+<d  name="DY1jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="671.83"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DY1jets/*.root" />
+<d  name="DY2jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="216.76"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DY2jets/*.root" />
+<d  name="DY3jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="61.2"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DY3jets/*.root" />
+<d  name="DY4jets" add="1" isData="0" NofEvts="-1" normf="1" xsection="27.6"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DY4jets/*.root" />
+-->
+
+<!-- SingleTop -->
+
+<!--
+<d  name="SingleTbar-s" add="1" isData="0" NofEvts="-1" normf="1" xsection="1.8"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleTbar-s/*.root" />
+<d  name="SingleTbar-t" add="1" isData="0" NofEvts="-1" normf="1" xsection="30.0"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleTbar-t/*.root" />
+<d  name="SingleTbar-tW" add="1" isData="0" NofEvts="-1" normf="1" xsection="11.2"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleTbar-tW/*.root" />
+<d  name="SingleT-s" add="1" isData="0" NofEvts="-1" normf="1" xsection="3.9"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleT-s/*.root" />
+<d  name="SingleT-t" add="1" isData="0" NofEvts="-1" normf="1" xsection="55.5"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleT-t/*.root" />
+<d  name="SingleT-tW" add="1" isData="0" NofEvts="-1" normf="1" xsection="11.2"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleT-tW/*.root" />
+-->
+
+<!-- Others -->
+
+<!--
+<d  name="TBZ" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.0114"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/TBZ/*.root" />
+<d  name="TTG" add="1" isData="0" NofEvts="-1" normf="1" xsection="2.166"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/TTG/*.root" />
+<d  name="TTW" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.23"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/TTW/*.root" />
+<d  name="TTWW" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.002037"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/TTWW/*.root" />
+<d  name="TTZ" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.21"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/TTZ/*.root" />
+<d  name="WWG" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.528"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WWG/*.root" />
+<d  name="WWTo2L2Nu" add="1" isData="0" NofEvts="-1" normf="1" xsection="5.8123"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WWTo2L2Nu/*.root" />
+<d  name="WWW" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.08058"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WWW/*.root" />
+<d  name="WWZ" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.05798"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WWZ/*.root" />
+<d  name="WZTo2L2Q" add="1" isData="0" NofEvts="-1" normf="1" xsection="2.206"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WZTo2L2Q/*.root" />
+<d  name="WZTo3LNu" add="1" isData="0" NofEvts="-1" normf="1" xsection="1.0575"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WZTo3LNu/*.root" />
+<d  name="WZZ" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.01698"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/WZZ/*.root" />
+<d  name="ZZTo2L2Nu" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.365"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ZZTo2L2Nu/*.root" />
+<d  name="ZZTo2L2Q" add="1" isData="0" NofEvts="-1" normf="1" xsection="2.4487"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ZZTo2L2Q/*.root" />
+<d  name="ZZTo4L" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.176908"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ZZTo4L/*.root" />
+<d  name="ZZZ" add="1" isData="0" NofEvts="-1" normf="1" xsection="0.0055269"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/ZZZ/*.root" />
+-->
+
+<!-- DoubleLepton Data -->
+<!--
+<d  name="DoubleElec" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DoubleElec_*/*.root" />
+<d  name="DoubleMuon" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/DoubleMuon_*/*.root" />
+<d  name="MuEl" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/MuEl_*/*.root" />
+-->
+<!-- SingleLepton Data -->
+<!--
+<d  name="SingleElec" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleElec_*/*.root" />
+<d  name="SingleMuon" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/SingleMuon_*/*.root" />
+-->
+</Datasets>
+
+<!--
+	#################################################
+	#            Selection configuration            #
+	#################################################
+-->
+
+<!--
+    Note : the pT/treshold and others cuts listed are actually not used in the selection
+           see the TTbarMETSelection / combined1LeptonStopSelecton.cc
+-->
+
+<Selection>
+	
+<s 
+	type="Electron" 
+	Loaded="1" 
+	Algo="selectedPatElectronsPF2PAT" 
+	PtThreshold="20." 
+	EtaThreshold="2.4" 
+	RelIso="0.10" 
+	D0Cut="0.02" 
+	VertexMatchThr="9999." 
+	DElectronETSCThr="99999." 
+	RemuThr="0.1"
+/>
+<s 
+	type="Muon"
+	Loaded="1"
+	Algo="selectedPatMuonsPF2PAT" 
+	PtThreshold="20." 
+	EtaThreshold="2.1" 
+	RelIso="0.125" 
+	D0Cut="0.02" 
+	VertexMatchThr="1." 
+	NofValidHits="0"  
+	NofValidTkHits="10" 
+	NormChi2="10" 
+/>
+<s 
+	type="Tau"      
+	Loaded="1" 
+	Algo="selectedPatTaus" 
+	PtThreshold="20." 
+	EtaThreshold="2.5" 
+	RelIso="0.15" 
+	D0Cut="0.04" 
+	VertexMatchThr="1." 
+	TauLeadTrkPtCut="10."
+/>
+<s 
+	type="Vertex"   
+	Loaded="1" 
+	Algo="offlinePrimaryVertices" 
+	VertexNdofThr="4" 
+	VertexZThr="24."   
+	VertexRhoThr="2." 
+/>
+<!--s 
+	type="PFCandidate"
+	Loaded="1"
+	Algo="particleFlow"
+/-->
+<s 
+	type="Jet" 
+	Loaded="1" 
+	Algo="pf" 
+	PtThreshold="30." 
+	EtaThreshold="2.5"
+/> 
+<!--s 
+	type="HeavyTagJet" 
+	Loaded="1" 
+	Algo="CA8Pruned"
+/-->
+
+</Selection>
+
+
+

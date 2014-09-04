@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+
+<!--
+	#################################################
+	#            Analysis configuration             #
+	#################################################
+-->
+
+<Analysis>
+<!--
+	DataType = [ 0: MC ; 1: Data ; 2 : Data & MC ]
+	Luminosity in in pb-1
+-->
+<!--a type="General" Verbosity="3" DataType="0" Luminosity="38.35"/>
+<a type="General" Verbosity="3" DataType="0" Luminosity="204.2" LumiError="12." PUWeightFile="/opt/sbg/data/data1/cms/echabert/TopDilep/CMSSW_4_1_4/src/MiniTreeAnalysis/NTupleAnalysis/macros/pudist_200pb.root" />
+-->
+<a 						
+   type="General" 
+   Verbosity="3" 
+   DataType="0" 
+   Luminosity="-1" 
+   LumiError="-1" 
+/>
+
+<!-- WARNING WARNING WARNING - Don't forget to use the good PU file !! S7 for signal (fastsim), S10 for background (fullsim) ! -->
+
+<a
+    type="Corrections"
+    pileUp="/opt/sbg/data/data1/cms/mbuttign/THESE/Monotop/Analysis/CMSSW_5_3_11/src/IPHCAnalysis/NTuple/macros/Monotop/babyTupleProduction/puWeights_S10.root"
+    pileUp_IPHC="/opt/sbg/data/data1/cms/mbuttign/THESE/Monotop/Analysis/CMSSW_5_3_11/src/IPHCAnalysis/NTuple/macros/Monotop/babyTupleProduction/MyDataPileupHistogramAllRuns.root"
+    bTagReshaping="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/stopAnalysis/inputs/bTagReshaping/bTagReshaping.root"
+    jetEnergyCorrectionMC="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/stopAnalysis/inputs/JEC/Fall12_Uncertainty_MC_AK5PF.txt"
+    jetEnergyCorrectionData="/opt/sbg/data/data4/cms/aaubin/analysisStudy_July13/CMSSW_5_3_2_patch4/src/NTuple/NTupleAnalysis/macros/stopAnalysis/inputs/JEC/Fall12_Uncertainty_Data_AK5PF.txt"
+/>
+
+</Analysis>
+
+
+
+<!--
+	#################################################
+	#            Datasets configuration             #
+	#################################################
+-->
+
+<Datasets>
+<!-- 
+     add = 1 : run on the sample
+     add = 0 : do not run on the sample
+     isData = 1 for data; = 0  for MC
+
+-->
+
+<!-- 
+<d  name="testSync" add="1" isData="1" NofEvts="-1" normf="1" xsection="-1"
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/Single*_B/NTuple_*.root" />
+-->
+
+<!-- Signals -->
+<!--d  name="S4_mchi200p0_Khristian" add="0" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data1/cms/mbuttign/THESE/Monotop/Prod/CMSSW_5_3_11/src/Prod_signal/RECOtoNTuple/NTuple_Khristian.root" />
+<d  name="S4_mchi200p0_Michael" add="0" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data1/cms/mbuttign/THESE/Monotop/Prod/CMSSW_5_3_11/src/Prod_signal/RECOtoNTuple/NTuple_Michael.root" />
+
+<d  name="S1_mres500p0_mchi100p0" add="0" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data1/cms/mbuttign/THESE/Monotop/Prod/CMSSW_5_3_11/src/Prod_signal/RECOtoNTuple/NTuple_testn10000.root" /-->
+<!--d  name="T2bw-050_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_withLSP0/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_withLSP0/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_noLSP0/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_LSP0to700" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_LSP0to700/T2bw_x-075_*/*.root" />
+
+<d  name="T2bw-025_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-025_*/*.root" />
+<d  name="T2bw-050_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-050_*/*.root" />
+<d  name="T2bw-075_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2bw_mLSP1/T2bw_x-075_*/*.root" />
+
+<d  name="T2tt_withLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_withLSP0/*/*.root" />
+<d  name="T2tt_noLSP0" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_noLSP0/*/*.root" />
+<d  name="T2tt_mLSP1" add="1" isData="0" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/data4/cms/aaubin/analysisProd_August13-v1/store/T2tt_mLSP1/*/*.root" />
+-->
+
+
+
+
+<!-- ttbar -->
+
+
+<d  name="NTuple_53X_TTJetsMadgraphZ2"           add="1" isData="0" NofEvts="-1" normf="1" xsection="245.8"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_TTJetsMadgraphZ2/NTuple_*.root" />
+<d  name="NTuple_53X_TTWJets_8TeVmadgraph"           add="0" isData="0" NofEvts="-1" normf="1" xsection="0.232"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_TTWJets_8TeVmadgraph_v0/NTuple_53X_TTWJets_8TeVmadgraph.root" />
+<d  name="NTuple_53X_TTZJets_8TeVmadgraph_v2"    add="0" isData="0" NofEvts="-1" normf="1" xsection="0.208"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_TTZJets_8TeVmadgraph_v2_v0/NTuple_53X_TTZJets_8TeVmadgraph_v2.root" />
+
+<!-- s.e. NLO 3L avec q = light, c ou b-->
+<d  name="NTuple_53X_TZJetsTo3LNuB"    add="0" isData="0" NofEvts="-1" normf="1" xsection=" 0.0096"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_TZJetsTo3LNuB_v0/NTuple_53X_TZJetsTo3LNuB.root" />
+
+
+
+
+<!-- W+jets -->
+
+
+<d  name="NTuple_53X_WJetsToLNu" add="0" isData="0" NofEvts="-1" normf="1" xsection="36864.3"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_WJetsToLNu/NTuple_*" />
+
+<d  name="NTuple_TTBarIncl_Jerem" add="0" isData="0" NofEvts="-1" normf="1" xsection="234.3"
+    filenames="/opt/sbg/data/safe1/cms/jandrea/UpdateFramework_2013_08_22/CMSSW_5_3_11/src/IPHCProducer/MiniTreeProducer/test/ProdMonotop/NTuple_53X_TTJetsMadgraphZ2/NTuple_121_*.root " />
+
+
+
+
+<!-- DY+jets -->
+
+
+<d  name="NTuple_53X_DYJetsToLL_M-10To50" add="1" isData="0" NofEvts="-1" normf="1" xsection="2580."
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_DYJetsToLL_M-10To50/NTuple_*" />
+<d  name="NTuple_53X_DYJetsToLL_M-50" add="1" isData="0" NofEvts="-1" normf="1" xsection="3531."
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_DYJetsToLL_M-50/NTuple_*" />
+
+
+
+
+<!-- SingleTop -->
+
+
+<d  name="NTuple_53X_T_s-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="3.79"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_T_s-channel/NTuple_*" />
+<d  name="NTuple_53X_T_t-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="56.4"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_T_t-channel/NTuple_*" />
+<d  name="NTuple_53X_T_tW-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="11.1"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_T_tW-channel/NTuple_*" />
+<!--d  name="NTuple_53X_Tbar_s-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="1.76"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_Tbar_s-channel/NTuple_*" /-->
+<d  name="NTuple_53X_Tbar_t-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="30.7"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_Tbar_t-channel/NTuple_*" />
+<d  name="NTuple_53X_Tbar_tW-channel" add="0" isData="0" NofEvts="-1" normf="1" xsection="11.1"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_Tbar_tW-channel/NTuple_*" />
+
+
+
+<!-- Diboson -->
+
+
+<d  name="NTuple_53X_WZJetsIncl" add="0" isData="0" NofEvts="-1" normf="1" xsection="1.189"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_WZJetsIncl_v0/NTuple_53X_WZJetsIncl.root" />
+<d  name="NTuple_53X_WWJetsIncl" add="0" isData="0" NofEvts="-1" normf="1" xsection="5.817"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_WWJetsIncl_v0/NTuple_53X_WWJetsIncl.root" />
+<d  name="NTuple_53X_ZZJetsIncl" add="0" isData="0" NofEvts="-1" normf="1" xsection="0.213"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_ZZJetsIncl_v0/NTuple_53X_ZZJetsIncl.root" />
+
+
+
+
+<!-- QCD MuEnriched-->
+
+
+<!--d  name="QCD_Pt_20_MuEnrichedPt_15" add="0" isData="0" NofEvts="-1" normf="1" xsection=""
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt_20_MuEnrichedPt_15/NTuple_*" /-->
+<!-- See on: https://github.com/ferencek/cms-BTagValidation/blob/master/test/datasetListForMerging.txt -->
+<d  name="QCD_Pt-20to30_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="1865500.0"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-20to30_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-30to50_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="806298.0"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-30to50_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-50to80_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="176187.6"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-50to80_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-80to120_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="40448.0"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-80to120_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-120to170_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="7463.94"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-120to170_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-170to300_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="2299.752"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-170to300_MuEnrichedPt5/NTuple_*" />
+<d  name="QCD_Pt-300to470_MuEnrichedPt5" add="1" isData="0" NofEvts="-1" normf="1" xsection="151.8048"
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Background/NTuple_53X_QCD_Pt-300to470_MuEnrichedPt5/NTuple_*" />
+
+
+
+<!-- Data-->
+
+
+<d  name="NTuple_53X_SingleMuRun2012A" add="1" isData="1" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/data/safe1/cms/mbuttign/THESE/Prod_samples/Data/NTuple_53X_SingleMuRun2012A/NTuple_53X_SingleMuRun2012A.root" />
+<d  name="NTuple_53X_SingleMuRun2012B" add="1" isData="1" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/cms/ui3_data3/mbuttign/DataSummer2012/NTuple_53X_SingleMuRun2012B/NTuple_*.root" />
+<d  name="NTuple_53X_SingleMuRun2012C" add="1" isData="1" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/cms/ui8_data1/mbuttign/DataSummer2012/NTuple_53X_SingleMuRun2012C/NTuple_*.root" />
+<d  name="NTuple_53X_SingleMuRun2012D" add="1" isData="1" NofEvts="-1" normf="1" xsection="1."
+    filenames="/opt/sbg/cms/ui8_data2/mbuttign/DataSummer2012/NTuple_53X_SingleMuRun2012D/NTuple_*.root" />
+
+
+</Datasets>
+
+<!--
+	#################################################
+	#            Selection configuration            #
+	#################################################
+-->
+
+<!--
+    Note : the pT/threshold and others cuts listed are actually not used in the selection
+           see the MyMonotopSkim.cc
+-->
+
+<Selection>
+	
+<s 
+	type="Electron" 
+	Loaded="1" 
+	Algo="selectedPatElectronsPFlow" 
+	PtThreshold="20." 
+	EtaThreshold="2.4" 
+	RelIso="0.10" 
+	D0Cut="0.02" 
+	VertexMatchThr="9999." 
+	DElectronETSCThr="99999." 
+	RemuThr="0.1"
+/>
+<s 
+	type="Muon"
+	Loaded="1"
+	Algo="selectedPatMuonsPFlow" 
+	PtThreshold="20." 
+	EtaThreshold="2.1" 
+	RelIso="0.125" 
+	D0Cut="0.02" 
+	VertexMatchThr="1." 
+	NofValidHits="0"  
+	NofValidTkHits="10" 
+	NormChi2="10" 
+/>
+<!--s 
+	type="Tau"      
+	Loaded="1" 
+	Algo="selectedPatTausPFlow" 
+	PtThreshold="20." 
+	EtaThreshold="2.5" 
+	RelIso="0.15" 
+	D0Cut="0.04" 
+	VertexMatchThr="1." 
+	TauLeadTrkPtCut="10."
+/-->
+<s 
+	type="Vertex"   
+	Loaded="1" 
+	Algo="offlinePrimaryVertices" 
+	VertexNdofThr="4" 
+	VertexZThr="24."   
+	VertexRhoThr="2." 
+/>
+<!--s 
+	type="PFCandidate"
+	Loaded="1"
+	Algo="particleFlow"
+/-->
+<s 
+	type="Jet" 
+	Loaded="1" 
+	Algo="pf" 
+	PtThreshold="30." 
+	EtaThreshold="2.5"
+/> 
+<!--s 
+	type="HeavyTagJet" 
+	Loaded="1" 
+	Algo="CA8Pruned"
+/-->
+
+</Selection>
+
+
+
