@@ -91,16 +91,28 @@ class MyMonotopSkim: public Selection
         float getMuonIsolation(IPHCTree::NTMuon &muon) const;
 
         // Selected electrons
-        std::vector<IPHCTree::NTElectron> doMonotopElectronsSelection() const;
+        std::vector<IPHCTree::NTElectron> doMonotopElectronsSelection( bool doCutOnIsolation ) const;
 
         // Selected loose electrons
-        std::vector<IPHCTree::NTElectron> doMonotopLooseElectronsSelection() const;
+        std::vector<IPHCTree::NTElectron> doMonotopLooseElectronsSelection( bool doCutOnIsolation ) const;
         
         // Selected jets
-        std::vector<IPHCTree::NTJet> doMonotopJetsSelection(int DataType) const;
+        std::vector<IPHCTree::NTJet> doMonotopJetsSelection(bool runningOnData) const;
+
+        // Selected jets
+        std::vector<IPHCTree::NTJet> doMonotopSmearedJetsSelection(short int jetResFactor);
 
         // Selected b-jets
-        std::vector<IPHCTree::NTJet> doMonotopBJetsSelection(int DataType) const; 
+        std::vector<IPHCTree::NTJet> doMonotopBJetsSelection(bool runningOnData) const; 
+
+        // Get the smeared MET
+        NTMET getSmearedMET(short int jetResFactor);
+
+        // Get the phi-corrected MET
+        NTMET getPhiCorrectedMET( bool runningOnData);
+
+        // Get the phi-corrected smeared MET
+        NTMET getPhiCorrectedSmearedMET( bool runningOnData, short int jetResFactor);
 
         // Check if a given trigger path has been trigerred
         bool checkPathHasBeenFired(string path);
@@ -109,10 +121,17 @@ class MyMonotopSkim: public Selection
         bool passTrigger(string channel);
 
         // Compute the transverse mass of the W
-        float MTw() const   { return sqrt( 2.* selectedLepton.Pt() * theMET.Pt() *(1. - cos( selectedLepton.Phi() - theMET.Phi()) )) ;}
+        float MTw() const   { return sqrt( 2.* selectedLepton.Pt() * thePhiCorrectedMET.Pt() *(1. - cos( selectedLepton.Phi() - thePhiCorrectedMET.Phi()) )) ;}
 
 	//Get the MET
-	float Met() const            { return rawMET.p2.Mod(); }
+        TLorentzVector getMET()                      { return theMET;}
+        TLorentzVector getMET_JER()                  { return theMET_JER;}
+        TLorentzVector getMET_JERdown()              { return theMET_JERdown;}
+        TLorentzVector getMET_JERup()                { return theMET_JERup;}
+        TLorentzVector getPhiCorrectedMET()          { return thePhiCorrectedMET;}
+        TLorentzVector getPhiCorrectedMET_JER()      { return thePhiCorrectedMET_JER;}
+        TLorentzVector getPhiCorrectedMET_JERdown()  { return thePhiCorrectedMET_JERdown;}
+        TLorentzVector getPhiCorrectedMET_JERup()    { return thePhiCorrectedMET_JERup;}
 
 	// Get the leading jet	
         TLorentzVector getLeadingJet()
@@ -188,8 +207,22 @@ class MyMonotopSkim: public Selection
         std::vector<IPHCTree::NTElectron> rawElectrons;
         std::vector<IPHCTree::NTMuon>     rawMuons;
         std::vector<IPHCTree::NTJet>      rawJets;
-	NTMET			          rawMET;
+	NTMET                             rawMET;
 	TLorentzVector      		  theMET;
+	NTMET      		          MET_JER;
+	TLorentzVector      		  theMET_JER;
+	NTMET      		          MET_JERdown;
+	TLorentzVector      		  theMET_JERdown;
+	NTMET      		          MET_JERup;
+	TLorentzVector      		  theMET_JERup;
+	NTMET      		          phiCorrectedMET;
+	TLorentzVector      		  thePhiCorrectedMET;
+	NTMET      		          phiCorrectedMET_JER;
+	TLorentzVector      		  thePhiCorrectedMET_JER;
+        NTMET      		          phiCorrectedMET_JERup;
+	TLorentzVector      		  thePhiCorrectedMET_JERup;
+	NTMET      		          phiCorrectedMET_JERdown;
+	TLorentzVector      		  thePhiCorrectedMET_JERdown;
 
         // Objects for analysis
 
@@ -198,9 +231,13 @@ class MyMonotopSkim: public Selection
         int selectedLepton_pdgid;
 
         std::vector<IPHCTree::NTElectron> selectedElectrons;
+        std::vector<IPHCTree::NTElectron> selectedElectronsWoIso;
         std::vector<IPHCTree::NTElectron> selectedLooseElectrons;
+        std::vector<IPHCTree::NTElectron> selectedLooseElectronsWoIso;
         std::vector<IPHCTree::NTMuon>     selectedMuons;
+        std::vector<IPHCTree::NTMuon>     selectedMuonsWoIso;
         std::vector<IPHCTree::NTMuon>     selectedLooseMuons;
+        std::vector<IPHCTree::NTMuon>     selectedLooseMuonsWoIso;
         std::vector<IPHCTree::NTJet>      selectedJets;
         std::vector<IPHCTree::NTJet>      selectedBJets;
 

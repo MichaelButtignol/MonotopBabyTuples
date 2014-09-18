@@ -27,10 +27,14 @@ typedef struct
     TLorentzVector selectedLepton;              // p4 of the leading selected lepton
     Float_t        selectedLeptonEta;           // Eta of the leading selected lepton
     Short_t        selectedLeptonPDGId;         // pdgid of the leading selected lepton
-    Short_t        nLooseMuons;                 // Number of selected loose muons
-    Short_t        nMuons;                      // Number of selected muons
-    Short_t        nElectrons;                  // Number of selected electrons
-    Short_t        nLooseElectrons;             // Number of selected loose electrons
+    Short_t        nLooseMuons;                 // Number of selected loose muons when iso < 0.20 is required
+    Short_t        nMuons;                      // Number of selected muons when iso < 0.12 is required
+    Short_t        nElectrons;                  // Number of selected electrons when iso < 0.15 is required
+    Short_t        nLooseElectrons;             // Number of selected loose electrons when iso < 0.1 is required
+    Short_t        nLooseMuonsWoIso;            // Number of selected loose muons when no isolation criteria is required
+    Short_t        nMuonsWoIso;                 // Number of selected muons when no isolation criteria is required
+    Short_t        nElectronsWoIso;             // Number of selected electrons when no isolation criteria is required
+    Short_t        nLooseElectronsWoIso;        // Number of selected loose electrons when no isolation criteria is required
     Float_t        selectedLeptonIsolation;     // Isolation of the lepton after the cut 
 
     // ------------
@@ -50,7 +54,14 @@ typedef struct
     // "High-level" /BDT variables
     // ------------
 
-    Float_t MET;                                // Type-1 + phi-corrected PF MET
+    TLorentzVector MET;                         // p4 of the MET
+    TLorentzVector MET_JER;                     // p4 of the smeared MET
+    TLorentzVector MET_JERdown;                 // p4 of the smeared MET - 1sigma
+    TLorentzVector MET_JERup;                   // p4 of the smeared MET + 1sigma
+    TLorentzVector PhiCorrectedMET;             // p4 of the phi-corrected MET
+    TLorentzVector PhiCorrectedMET_JER;         // p4 of the smeared phi-corrected MET
+    TLorentzVector PhiCorrectedMET_JERdown;     // p4 of the smeared phi-corrected MET - 1sigma
+    TLorentzVector PhiCorrectedMET_JERup;       // p4 of the smeared phi-corrected MET + 1sigma
     Float_t MTw;                                // Transvers mass of the W boson
     Float_t leadingJetPt;                       // pT of the leading jet
     Float_t leadingJetEta;                      // Eta of the leading jet
@@ -95,12 +106,6 @@ typedef struct
     vector<Float_t> jets_CSV_reshapedDownBC;
     vector<Float_t> jets_CSV_reshapedUpLight;
     vector<Float_t> jets_CSV_reshapedDownLight;
-
-        // Raw MET (used as a cross check for when applying MET filters after production)
-
-    Float_t rawPFMET;                           // Raw MET from PF-based algorithm 
-
-
 
 } babyEvent;
 
@@ -157,7 +162,11 @@ void ProofJob::InitializeBranches(TTree* theTree, TTree* theCutFlowTree, babyEve
     theTree->Branch("nMuons",                                       &(myEvent->nMuons));
     theTree->Branch("nLooseElectrons",                              &(myEvent->nLooseElectrons));
     theTree->Branch("nElectrons",                                   &(myEvent->nElectrons));
-    theTree->Branch("selectedLeptonIsolation",                       &(myEvent->selectedLeptonIsolation));
+    theTree->Branch("nLooseMuonsWoIso",                             &(myEvent->nLooseMuonsWoIso));
+    theTree->Branch("nMuonsWoIso",                                  &(myEvent->nMuonsWoIso));
+    theTree->Branch("nLooseElectronsWoIso",                         &(myEvent->nLooseElectronsWoIso));
+    theTree->Branch("nElectronsWoIso",                              &(myEvent->nElectronsWoIso));
+    theTree->Branch("selectedLeptonIsolation",                      &(myEvent->selectedLeptonIsolation));
 
     theTree->Branch("nJets",                                        &(myEvent->nJets));
     //theTree->Branch("leadingJet","TLorentzVector",                &(myEvent->leadingJet));
@@ -169,7 +178,14 @@ void ProofJob::InitializeBranches(TTree* theTree, TTree* theCutFlowTree, babyEve
     theTree->Branch("jets_CSV_reshaped","std::vector<Float_t>",     &(myEvent->jets_CSV_reshaped));
 
 
-    theTree->Branch("MET",                                          &(myEvent->MET));
+    theTree->Branch("MET","TLorentzVector",                         &(myEvent->MET));
+    theTree->Branch("MET_JER","TLorentzVector",                     &(myEvent->MET_JER));
+    theTree->Branch("MET_JERdown","TLorentzVector",                 &(myEvent->MET_JERdown));
+    theTree->Branch("MET_JERup","TLorentzVector",                   &(myEvent->MET_JERup));
+    theTree->Branch("PhiCorrectedMET","TLorentzVector",             &(myEvent->PhiCorrectedMET));
+    theTree->Branch("PhiCorrectedMET_JER","TLorentzVector",         &(myEvent->PhiCorrectedMET_JER));
+    theTree->Branch("PhiCorrectedMET_JERdown","TLorentzVector",     &(myEvent->PhiCorrectedMET_JERdown));
+    theTree->Branch("PhiCorrectedMET_JERup","TLorentzVector",       &(myEvent->PhiCorrectedMET_JERup));
     theTree->Branch("MTw",                                          &(myEvent->MTw));
     theTree->Branch("leadingJetPt",                                 &(myEvent->leadingJetPt));
     theTree->Branch("leadingJetEta",                                &(myEvent->leadingJetEta));
@@ -186,14 +202,13 @@ void ProofJob::InitializeBranches(TTree* theTree, TTree* theCutFlowTree, babyEve
     theTree->Branch("numberOfPrimaryVertices",                      &(myEvent->numberOfPrimaryVertices));
     theTree->Branch("weightCrossSection",                           &(myEvent->weightCrossSection));
     theTree->Branch("weightPileUp",                                 &(myEvent->weightPileUp));
-    theTree->Branch("weightPileUp_IPHC",                            &(myEvent->weightPileUp_IPHC));
+    theTree->Branch("weightPileUp_RunA",                            &(myEvent->weightPileUp_IPHC));
 
     //theTree->Branch("jets_CSV_reshapedUpBC",       "std::vector<Float_t>",          &(myEvent->jets_CSV_reshapedUpBC));
     //theTree->Branch("jets_CSV_reshapedDownBC",     "std::vector<Float_t>",          &(myEvent->jets_CSV_reshapedDownBC));
     //theTree->Branch("jets_CSV_reshapedUpLight",    "std::vector<Float_t>",          &(myEvent->jets_CSV_reshapedUpLight));
     //theTree->Branch("jets_CSV_reshapedDownLight",  "std::vector<Float_t>",          &(myEvent->jets_CSV_reshapedDownLight));
 
-    theTree->Branch("rawPFMET",			                    &(myEvent->rawPFMET));
 
     theCutFlowTree->Branch("leptonsBeforeCut","std::vector<TLorentzVector>",  &(myCutFlowEvent->leptons_beforecut));
     theCutFlowTree->Branch("leptonsAfterCut","TLorentzVector",                &(myEvent->selectedLepton));
@@ -222,11 +237,15 @@ Bool_t ProofJob::Process(Long64_t entry)
     bool runningOnData = dataset->isData();
 
     IPHCTree::NTMonteCarlo mcInfo;
-    vector<IPHCTree::NTGenParticle> MCParticles;
+    vector<IPHCTree::TopDecaysMC> MCTopParticles;
+    vector<IPHCTree::WDecaysMC>   MCWParticles;
+    vector<IPHCTree::ZDecaysMC>   MCZParticles;
     if (!runningOnData)
     {
         mcInfo = *((sel).GetPointer2MC());    
-        MCParticles = mcInfo.genParticles;
+        MCTopParticles = mcInfo.topAndDecays;
+        MCWParticles = mcInfo.wAndDecays;
+        MCZParticles = mcInfo.zAndDecays;
         monotopMCinfo->LoadEvent(event);
     }    
 
@@ -356,11 +375,17 @@ Bool_t ProofJob::Process(Long64_t entry)
     else
     {
 
-        myEvent.numberOfTruePU = sel.getTnpv();
+        myEvent.numberOfTruePU    = sel.getTnpv();
         myEvent.weightPileUp      = sel.getPileUpWeightFromHistoRatio(myEvent.numberOfTruePU,runningOnData);
         myEvent.weightPileUp_IPHC = sel.getPileUpWeightFromHistoData(myEvent.numberOfTruePU,runningOnData);
     }
-
+cout << "#############################################################" << endl;
+cout << "################   PILE UP WEIGHTS CHECKS  ##################" << endl;
+cout << "#############################################################" << endl;
+cout << endl;
+cout << "##### Weight_Alex = " << myEvent.weightPileUp      << endl;
+cout << "##### Weight_Jere = " << myEvent.weightPileUp_IPHC << endl;
+cout << endl;
 
     // #####################
     // #   Trigger infos   #
@@ -376,8 +401,12 @@ Bool_t ProofJob::Process(Long64_t entry)
 
     myEvent.nLooseMuons              = sel.doMonotopLooseMuonsSelection(true).size();
     myEvent.nMuons                   = sel.doMonotopMuonsSelection(true).size();
-    myEvent.nLooseElectrons          = sel.doMonotopLooseElectronsSelection().size();
-    myEvent.nElectrons               = sel.doMonotopElectronsSelection().size();
+    myEvent.nLooseElectrons          = sel.doMonotopLooseElectronsSelection(true).size();
+    myEvent.nElectrons               = sel.doMonotopElectronsSelection(true).size();
+    myEvent.nLooseMuonsWoIso         = sel.doMonotopLooseMuonsSelection(false).size();
+    myEvent.nMuonsWoIso              = sel.doMonotopMuonsSelection(false).size();
+    myEvent.nLooseElectronsWoIso     = sel.doMonotopLooseElectronsSelection(false).size();
+    myEvent.nElectronsWoIso          = sel.doMonotopElectronsSelection(false).size();
 
     myEvent.numberOfLepton           = sel.getNumberOfSelectedLeptons();
     myEvent.selectedLepton           = sel.getSelectedLepton();
@@ -388,7 +417,7 @@ Bool_t ProofJob::Process(Long64_t entry)
 
     float leptonCharge;
     if (myEvent.selectedLeptonPDGId > 0) leptonCharge = -1.0;
-    else                                leptonCharge = +1.0;
+    else                                 leptonCharge = +1.0;
 
     // ####################
     // #  Fill jets info  #
@@ -421,32 +450,34 @@ Bool_t ProofJob::Process(Long64_t entry)
 
 
     }
-        
-
-
-
-
-
-
 
 
     // #############################
     // #  "High-level" variables   #
     // #############################
 
-    myEvent.MET                   = sel.Met();
-    myEvent.MTw                   = sel.MTw();
-    myEvent.leadingJetPt          = sel.getLeadingJet().Pt();
-    myEvent.leadingJetEta         = abs(sel.getLeadingJet().Eta());
-    myEvent.selectedLeptonEta     = abs(sel.getSelectedLepton().Eta());
-    if(sel.getSelectedJets().size() == 0) myEvent.DeltaR_leadJet_lep  = -1;
-    else                                  myEvent.DeltaR_leadJet_lep  = (sel.getLeadingJet()).DeltaR(sel.getSelectedLepton());
-    if(abs(myEvent.DeltaR_leadJet_lep) >= 100) myEvent.DeltaR_leadJet_lep  = -1;
+    myEvent.MET                        = sel.getMET();
+    myEvent.MET_JER                    = sel.getMET_JER();
+    myEvent.MET_JERdown                = sel.getMET_JERdown();
+    myEvent.MET_JERup                  = sel.getMET_JERup();
+    myEvent.PhiCorrectedMET            = sel.getPhiCorrectedMET();
+    myEvent.PhiCorrectedMET_JER        = sel.getPhiCorrectedMET_JER();
+    myEvent.PhiCorrectedMET_JERdown    = sel.getPhiCorrectedMET_JERdown();
+    myEvent.PhiCorrectedMET_JERup      = sel.getPhiCorrectedMET_JERup();
+
+    myEvent.MTw                        = sel.MTw();
+    myEvent.leadingJetPt               = sel.getLeadingJet().Pt();
+    myEvent.leadingJetEta              = abs(sel.getLeadingJet().Eta());
+    myEvent.selectedLeptonEta          = abs(sel.getSelectedLepton().Eta());
+
+    if(sel.getSelectedJets().size() == 0)          myEvent.DeltaR_leadJet_lep  = -1;
+    else                                           myEvent.DeltaR_leadJet_lep  = (sel.getLeadingJet()).DeltaR(sel.getSelectedLepton());
+    if(abs(myEvent.DeltaR_leadJet_lep) >= 100)     myEvent.DeltaR_leadJet_lep  = -1;
     if(abs(myEvent.DeltaR_leadJet_lep) <= 0.001)
     {
-       cout << "WARNING:::::::::::::::::::LeadingJetEta= " << sel.getLeadingJet().Eta() << endl;
-       cout << "WARNING:::::::::::::::::::SelectedLeptonEta= " << sel.getSelectedLepton().Eta() << endl;
-       cout << "WARNING:::::::::::::::::::DeltaR= " << (sel.getLeadingJet()).DeltaR(sel.getSelectedLepton()) << endl;
+       cout << "WARNING:::::::::::::::::::LeadingJetEta= "     << sel.getLeadingJet().Eta()                             << endl;
+       cout << "WARNING:::::::::::::::::::SelectedLeptonEta= " << sel.getSelectedLepton().Eta()                         << endl;
+       cout << "WARNING:::::::::::::::::::DeltaR= "            << (sel.getLeadingJet()).DeltaR(sel.getSelectedLepton()) << endl;
     }
 
     myEvent.numberOfPrimaryVertices = sel.GetVertex().size();
@@ -476,22 +507,53 @@ Bool_t ProofJob::Process(Long64_t entry)
     }
     else
     {
-
-        // TMEME decoding
-        int TMEME = mcInfo.TMEME; 
-        int  MEME = TMEME % 10000; 
-        int   EME =  MEME % 1000; 
-        int    ME =   EME % 100; 
-        int     E =    ME % 10;
-
-        myEvent.numberOfGenLepton = TMEME/10000 + ME/10 + E/1;
-
-        for (unsigned int i = 0 ; i < MCParticles.size() ; i++)  
+        for (unsigned int i = 0 ; i < MCTopParticles.size() ; i++)  
         {
-            myEvent.genParticles.push_back(MCParticles[i].p4);
-            myEvent.genParticlesPDGId.push_back(MCParticles[i].id);
-            myEvent.genParticlesMother.push_back(MCParticles[i].motherIndex_);
+            myEvent.genParticles.push_back(MCTopParticles[i].p4_t_gen);
+            myEvent.genParticlesPDGId.push_back(6);
+            // Because as a convention, Id's of unknown mother are set to 10
+            myEvent.genParticlesMother.push_back(10);
+            myEvent.genParticles.push_back(MCTopParticles[i].p4_b_gen);
+            myEvent.genParticlesPDGId.push_back(5);
+            myEvent.genParticlesMother.push_back(6);
         }
+
+        for (unsigned int i = 0 ; i < MCWParticles.size() ; i++)  
+        {
+            myEvent.genParticles.push_back(MCWParticles[i].p4_W_gen);
+            myEvent.genParticlesPDGId.push_back(24);
+            // Because as a convention, Id's of unknown mother are set to 10
+            myEvent.genParticlesMother.push_back(10);
+            myEvent.genParticles.push_back(MCWParticles[i].p4_Lep_gen);
+            myEvent.genParticlesPDGId.push_back(MCWParticles[i].mcLepId);
+            myEvent.genParticlesMother.push_back(MCWParticles[i].mcMotherId);
+            myEvent.genParticles.push_back(MCWParticles[i].p4_Neu_gen);
+            // Because the neutrino has the same flavour as the charged lepton
+            myEvent.genParticlesPDGId.push_back(abs(MCWParticles[i].mcLepId) + 1);
+            // Because the neutrino is expected to have the same mother as the charged lepton
+            myEvent.genParticlesMother.push_back(MCWParticles[i].mcMotherId);
+        }        
+
+        for (unsigned int i = 0 ; i < MCZParticles.size() ; i++)  
+        {
+            myEvent.genParticles.push_back(MCZParticles[i].p4_Z_gen);
+            myEvent.genParticlesPDGId.push_back(23);
+            myEvent.genParticlesMother.push_back(MCZParticles[i].mcMotherId);
+            myEvent.genParticles.push_back(MCZParticles[i].p4_Lep1_gen);
+            myEvent.genParticlesPDGId.push_back(MCZParticles[i].Lep1_pdgID);
+            myEvent.genParticlesMother.push_back(23);
+            myEvent.genParticles.push_back(MCZParticles[i].p4_Lep2_gen);
+            myEvent.genParticlesPDGId.push_back(MCZParticles[i].Lep2_pdgID);
+            myEvent.genParticlesMother.push_back(23);
+        }
+
+        int Nlepton = 0;
+        for (unsigned int i = 0 ; i < myEvent.genParticlesPDGId.size() ; i++)
+        { 
+            if (abs(myEvent.genParticlesPDGId[i] == 11) || abs(myEvent.genParticlesPDGId[i] == 13) || abs(myEvent.genParticlesPDGId[i] == 15) ) Nlepton++;
+        }
+        myEvent.numberOfGenLepton = Nlepton;
+        cout << "numberOfGenLeptons= " << myEvent.numberOfGenLepton << endl;
     }
 
 

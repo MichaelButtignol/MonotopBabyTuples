@@ -52,11 +52,15 @@ void MyMonotopSkim::doObjectSelection(bool runningOnData, short int JESvariation
 
     rawElectrons.clear();
     selectedElectrons.clear();
+    selectedElectronsWoIso.clear();
     selectedLooseElectrons.clear();
+    selectedLooseElectronsWoIso.clear();
 
     rawMuons.clear();
     selectedMuons.clear();
+    selectedMuonsWoIso.clear();
     selectedLooseMuons.clear();
+    selectedLooseMuonsWoIso.clear();
 
     rawJets.clear();
     selectedJets.clear();
@@ -65,11 +69,25 @@ void MyMonotopSkim::doObjectSelection(bool runningOnData, short int JESvariation
 
     // Raw / good objects
 
-    rawElectrons      = *GetPointer2Electrons();
-    rawMuons          = *GetPointer2Muons();
-    rawJets           = *GetPointer2Jets();
-    rawMET            = *GetPointer2MET();
-    theMET            = TLorentzVector(rawMET.p2.Px(),rawMET.p2.Py(),0.,rawMET.p2.Mod());
+    rawElectrons               = *GetPointer2Electrons();
+    rawMuons                   = *GetPointer2Muons();
+    rawJets                    = *GetPointer2Jets();
+    rawMET                     = *GetPointer2MET();  // Does exactly the same as GetMET()
+    theMET                     = TLorentzVector(rawMET.p2.Px(),rawMET.p2.Py(),0.,rawMET.p2.Mod());
+    phiCorrectedMET            = getPhiCorrectedMET(runningOnData); 
+    thePhiCorrectedMET         = TLorentzVector(phiCorrectedMET.p2.Px(),phiCorrectedMET.p2.Py(),0.,phiCorrectedMET.p2.Mod());
+    phiCorrectedMET_JER        = getPhiCorrectedSmearedMET(runningOnData , 0); 
+    thePhiCorrectedMET_JER     = TLorentzVector(phiCorrectedMET_JER.p2.Px(),phiCorrectedMET_JER.p2.Py(),0.,phiCorrectedMET_JER.p2.Mod());
+    phiCorrectedMET_JERdown    = getPhiCorrectedSmearedMET(runningOnData , -1); 
+    thePhiCorrectedMET_JERdown = TLorentzVector(phiCorrectedMET_JERdown.p2.Px(),phiCorrectedMET_JERdown.p2.Py(),0.,phiCorrectedMET_JERdown.p2.Mod());
+    phiCorrectedMET_JERup      = getPhiCorrectedSmearedMET(runningOnData , 1); 
+    thePhiCorrectedMET_JERup   = TLorentzVector(phiCorrectedMET_JERup.p2.Px(),phiCorrectedMET_JERup.p2.Py(),0.,phiCorrectedMET_JERup.p2.Mod());
+    MET_JER                    = getSmearedMET(0);
+    theMET_JER                 = TLorentzVector(MET_JER.p2.Px(),MET_JER.p2.Py(),0.,MET_JER.p2.Mod());
+    MET_JERdown                = getSmearedMET(-1);
+    theMET_JERdown             = TLorentzVector(MET_JERdown.p2.Px(),MET_JERdown.p2.Py(),0.,MET_JERdown.p2.Mod());
+    MET_JERup                  = getSmearedMET(+1);
+    theMET_JERup               = TLorentzVector(MET_JERup.p2.Px(),MET_JERup.p2.Py(),0.,MET_JERup.p2.Mod());
 
     // JES variations if asked
 
@@ -78,12 +96,16 @@ void MyMonotopSkim::doObjectSelection(bool runningOnData, short int JESvariation
 
     // Selected objects
 
-    selectedLooseMuons     = doMonotopLooseMuonsSelection( true );
-    selectedMuons          = doMonotopMuonsSelection( true );
-    selectedLooseElectrons = doMonotopLooseElectronsSelection();
-    selectedElectrons      = doMonotopElectronsSelection();
-    selectedJets           = doMonotopJetsSelection (runningOnData);
-    selectedBJets          = doMonotopBJetsSelection(runningOnData);
+    selectedLooseMuons          = doMonotopLooseMuonsSelection( true );
+    selectedMuons               = doMonotopMuonsSelection( true );
+    selectedLooseMuonsWoIso     = doMonotopLooseMuonsSelection( false );
+    selectedMuonsWoIso          = doMonotopMuonsSelection( false );
+    selectedLooseElectrons      = doMonotopLooseElectronsSelection( true );
+    selectedElectrons           = doMonotopElectronsSelection( true );
+    selectedLooseElectronsWoIso = doMonotopLooseElectronsSelection( false );
+    selectedElectronsWoIso      = doMonotopElectronsSelection( false );
+    selectedJets                = doMonotopJetsSelection (runningOnData);
+    selectedBJets               = doMonotopBJetsSelection(runningOnData);
 
 }
 
@@ -117,7 +139,7 @@ short int MyMonotopSkim::passEventSelection(bool runningOnData, string datasetNa
         // ######################
         //cout << "Number of electrons= " << selectedElectrons.size() << " and Number of muons= " << selectedMuons.size() << endl;
         //if (selectedLooseMuons.size() == 1 && selectedLooseElectrons.size() == 0 && selectedMuons.size() == 1)
-        if (selectedMuons.size() == 1)
+        if (selectedMuonsWoIso.size() >= 1)
         {
             passCuts = 2;
 
@@ -170,9 +192,12 @@ void MyMonotopSkim::FillKinematicP4()
     }
     else 
     {
-         DEBUG_MSG << "There is a problem with the selected lepton!" << endl;
-         DEBUG_MSG << "There is: " << selectedMuons.size() << " muons on " << selectedLooseMuons.size() << "loose muons" << endl;
-         DEBUG_MSG << "There is: " << selectedElectrons.size() << " electrons on " << selectedLooseElectrons.size() << "loose electrons" << endl;
+        // When several leptons pass the selection --> Events with selectedLepton-pdgid=0 will be rejected in the analysis
+        selectedLepton.SetPxPyPzE(0.,0.,0.,0.);
+        selectedLepton_pdgid = 0;
+        DEBUG_MSG << "There is a problem with the selected lepton!" << endl;
+        DEBUG_MSG << "There is: " << selectedMuons.size() << " muons on " << selectedLooseMuons.size() << "loose muons" << endl;
+        DEBUG_MSG << "There is: " << selectedElectrons.size() << " electrons on " << selectedLooseElectrons.size() << "loose electrons" << endl;
     }
 
 }
@@ -249,7 +274,7 @@ bool MyMonotopSkim::checkPathHasBeenFired(string path)
 // #                                                                                                    #
 // ######################################################################################################
 
-std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopLooseMuonsSelection( bool doCutOnIsolation = true ) const
+std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopLooseMuonsSelection( bool doCutOnIsolation ) const
 {
     // Container for output
     std::vector<IPHCTree::NTMuon> outputVector;
@@ -288,7 +313,7 @@ std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopLooseMuonsSelection( bool 
 // #                                                                            # 
 // ##############################################################################
 
-std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopMuonsSelection( bool doCutOnIsolation = true ) const
+std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopMuonsSelection( bool doCutOnIsolation ) const
 {
 
     // Container for output
@@ -306,7 +331,7 @@ std::vector<IPHCTree::NTMuon> MyMonotopSkim::doMonotopMuonsSelection( bool doCut
         //if (!muons[i].isTrackerMuon)                              continue;
         if (!muons[i].isGlobalMuon)                                 continue;
         if (muons[i].p4.Pt()  < 26)                                 continue;
-        if (muons[i].p4.Eta() > 2.1)                                continue;
+        if (fabs(muons[i].p4.Eta()) > 2.1)                           continue;
         if (doCutOnIsolation)
         {
                 if (getMuonIsolation(muons[i]) >= 0.12)             continue;
@@ -353,7 +378,7 @@ float MyMonotopSkim::getMuonIsolation(IPHCTree::NTMuon &muon) const
 // #                                                                                                              #
 // ###############################################################################################################
 
-std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopLooseElectronsSelection() const
+std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopLooseElectronsSelection( bool doCutOnIsolation ) const
 {
     // Container for output
     std::vector<IPHCTree::NTElectron> outputVector;
@@ -369,8 +394,12 @@ std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopLooseElectronsSelectio
         if (electrons[i].p4.Pt() < 20)                                        continue;
         if (electrons[i].ID["mvaTrigV0"] < 0.0)                                continue; 
         if (electrons[i].ID["mvaTrigV0"] > 1.0)                                continue; 
-        if (static_cast<double>(RelIso03PF(electrons[i])) >= 0.15)        continue;
-        
+
+        if (doCutOnIsolation)
+        {
+           if (static_cast<double>(RelIso03PF(electrons[i])) >= 0.15)        continue;
+        }
+
         //float chargedIso  = electrons[i].isolation["RA3Charg"];
         //float photonIso   = electrons[i].isolation["RA3Photo"];
         //float neutralIso  = electrons[i].isolation["RA3Neutr"];
@@ -397,7 +426,7 @@ std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopLooseElectronsSelectio
 // #  \____/ \___|_|\___|\___|\__\___|\__,_|  \___|_|\___|\___|\__|_|  \___/|_| |_|___/  #
 // #                                                                                     #
 // #######################################################################################
-std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopElectronsSelection() const
+std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopElectronsSelection( bool doCutOnIsolation ) const
 {
     std::vector<IPHCTree::NTElectron> outputVector;
 
@@ -410,7 +439,7 @@ std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopElectronsSelection() c
         //if (!electrons[i].isPFElectron)                                          continue; //because using 5_3_X
         if (!electrons[i].isGsfElectron)                                               continue; //when using before 5_3_X
         if (electrons[i].p4.Pt() < 30)                                                 continue;
-        if (electrons[i].p4.Eta() > 2.5)                                         continue;
+        if (fabs(electrons[i].p4.Eta()) > 2.5)                                         continue;
         //if (fabs(electrons[i].etaSuperCluster) < 1.4442)                         continue; //to exclude EB-EE transition region
 
         if (fabs(electrons[i].etaSuperCluster) > 1.5660)                         continue; //to exclude EB-EE transition region 
@@ -420,8 +449,11 @@ std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopElectronsSelection() c
         if (electrons[i].passConversionVeto == false)                                 continue;
         if (electrons[i].ID["mvaTrigV0"] < 0.5)                                        continue; 
         if (electrons[i].missingHits > 0)                                        continue; //to veto photon reco. as electron
-        if (static_cast<double>(RelIso03PF(electrons[i])) > 0.1)                continue;
-        
+
+        if (doCutOnIsolation)
+        {
+           if (static_cast<double>(RelIso03PF(electrons[i])) > 0.1)                continue;
+        }
         //float chargedIso  = electrons[i].isolation["RA3Charg"];
         //float photonIso   = electrons[i].isolation["RA3Photo"];
         //float neutralIso  = electrons[i].isolation["RA3Neutr"];
@@ -451,8 +483,7 @@ std::vector<IPHCTree::NTElectron> MyMonotopSkim::doMonotopElectronsSelection() c
 // #                                         |__/                #
 // ###############################################################
 
-std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopJetsSelection(
-        int DataType) const
+std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopJetsSelection(bool runningOnData) const
 {
     // Container for output
     std::vector<IPHCTree::NTJet> outputVector;
@@ -495,6 +526,98 @@ std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopJetsSelection(
     return outputVector;
 }
 
+// ######################################################################################
+// #   _____      _           _           _                            _      _         #
+// #  /  ___|    | |         | |         | |                          (_)    | |        #
+// #  \ `--.  ___| | ___  ___| |_ ___  __| |   ___  _ __ ___   ___     _  ___| |_ ___   #
+// #   `--. \/ _ \ |/ _ \/ __| __/ _ \/ _` |  / __|| '_ ` _ \ / _ \   | |/ _ \ __/ __|  #
+// #  /\__/ /  __/ |  __/ (__| ||  __/ (_| |  \__ \| | | | | |  __/   | |  __/ |_\__ \  #
+// #  \____/ \___|_|\___|\___|\__\___|\__,_|  |___/|_| |_| |_|\___|   | |\___|\__|___/  #
+// #                                                                 _/ |               #
+// #                                                                |__/                #
+// ######################################################################################
+
+std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopSmearedJetsSelection(short int jetResFactor)
+{
+    // Container for output
+    std::vector<IPHCTree::NTJet> outputVector = rawJets;
+
+  for (unsigned int i=0; i<outputVector.size(); i++)
+  {
+
+    if(outputVector[i].p4.Pt() < 10 ) continue;
+
+    TLorentzVector jet = outputVector[i].p4;
+    TLorentzVector genJet = outputVector[i].p4Gen;
+
+    double Px = 0;
+    double Py = 0;
+    double Pz = 0;
+    double E = 0;
+
+    double pt = jet.Pt();
+    double factor = 1.;
+    //for 8TeV analysis
+
+    if ( fabs(jet.Eta()) < 0.5 ) {
+      factor = 1.079;
+      if(jetResFactor > 0.1  )  factor = 1.105 ;
+      if(jetResFactor < -0.1 )  factor = 1.053;
+    }
+    else if ( fabs(jet.Eta()) < 1.1 && fabs(jet.Eta()) >= 0.5 ) {
+      factor = 1.099;
+      if(jetResFactor > 0.1  )  factor = 1.127     ;
+      if(jetResFactor < -0.1 )  factor = 1.071;
+    }
+    else if ( fabs(jet.Eta()) < 1.7 && fabs(jet.Eta()) >= 1.1 ) {
+      factor = 1.121;
+      if(jetResFactor > 0.1  )  factor = 1.150 ;
+      if(jetResFactor < -0.1 )  factor = 1.092;
+    }
+    else if ( fabs(jet.Eta()) < 2.3 && fabs(jet.Eta()) >= 1.7 ) {
+      factor = 1.208 ;
+      if(jetResFactor > 0.1  )  factor = 1.254;
+      if(jetResFactor < -0.1 )  factor = 1.162;
+
+    }
+    else if (fabs(jet.Eta()) < 2.8 && fabs(jet.Eta()) >=2.3 ) {
+      factor = 1.254;
+      if(jetResFactor > 0.1  )  factor = 1.316 ;
+      if(jetResFactor < -0.1 )  factor = 1.192 ;
+    }
+    else if (fabs(jet.Eta()) < 3.2 && fabs(jet.Eta()) >=2.8 ) {
+      factor = 1.395;
+      if(jetResFactor > 0.1  )  factor = 1.458 ;
+      if(jetResFactor < -0.1 )  factor = 1.332;
+    }
+    else if (fabs(jet.Eta()) < 5.0 && fabs(jet.Eta()) >=3.8 ) {
+      factor = 1.056;
+      if(jetResFactor > 0.1  )  factor = 1.247 ;
+      if(jetResFactor < -0.1 )  factor = 0.865;
+    }
+
+
+
+    double ptscale = 1;
+    double gen_pt = genJet.Pt();
+    double reco_pt = pt;
+    ptscale = max(0.0, gen_pt+factor*(reco_pt-gen_pt));
+
+    ptscale = ptscale/reco_pt;
+
+    Px   = ptscale*outputVector[i].p4.Px();
+    Py   = ptscale*outputVector[i].p4.Py();
+    Pz   = ptscale*outputVector[i].p4.Pz();
+    E    = ptscale*outputVector[i].p4.E();
+    outputVector[i].p4.SetPxPyPzE(Px, Py, Pz, E); 
+
+  }
+
+    std::sort(outputVector.begin(),outputVector.end(),HighestPt());
+    return outputVector;
+}
+
+
 // #######################################################################
 // #   _____      _           _           _     _       _      _         #
 // #  /  ___|    | |         | |         | |   | |     (_)    | |        #
@@ -505,8 +628,7 @@ std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopJetsSelection(
 // #                                                  _/ |               #
 // #                                                 |__/                #
 // #######################################################################
-std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopBJetsSelection(
-        int DataType) const
+std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopBJetsSelection(bool runningOnData) const
 {
     std::vector<IPHCTree::NTJet> bJets;
 
@@ -524,3 +646,119 @@ std::vector<IPHCTree::NTJet> MyMonotopSkim::doMonotopBJetsSelection(
 
     return bJets;
 }
+
+// ##################################################
+// #   _____                                  _     #
+// #  /  ___|                                | |    #
+// #  \ `--.  _ __ ___   ___   _ __ ___   ___| |_   #
+// #   `--. \| '_ ` _ \ / _ \ | '_ ` _ \ / _ \ __/  #
+// #  /\__/ /| | | | | |  __/ | | | | | |  __/ |_   #
+// #  \____/ |_| |_| |_|\___| |_| |_| |_|\___|\__|  #
+// #                                                #
+// #                                                #
+// ##################################################
+
+NTMET MyMonotopSkim::getSmearedMET(short int jetResFactor)
+{
+    // Container for output
+    NTMET outputVector;
+
+   // Get the smeared jets
+    std::vector<IPHCTree::NTJet> smearedJets = doMonotopSmearedJetsSelection(jetResFactor);
+
+    // Stock the non-smeared MET in a vector 
+    TVector2  themet(rawMET.p2.Px(),rawMET.p2.Py() ); 
+
+   // Remove the infos of the non-smeared jets from the met
+   for (unsigned int i=0; i<rawJets.size(); i++)
+   {
+     TVector2 jetDivector( (rawJets[i]).p4.Px(), (rawJets[i]).p4.Py());
+     themet += jetDivector;
+   }
+
+   // Add the infos of smeared jets in the met calculation
+   for (unsigned int i=0; i<smearedJets.size(); i++)
+   {
+     TVector2 jetDivector((smearedJets[i]).p4.Px(), (smearedJets[i]).p4.Py());
+     themet -= jetDivector;
+   }
+
+   outputVector = rawMET;
+   outputVector.p2.Set(themet.Px(),themet.Py());
+
+   return outputVector;
+}
+
+NTMET MyMonotopSkim::getPhiCorrectedSmearedMET(bool runningOnData, short int jetResFactor) 
+{
+    // To correct the MET in the Phi direction (xy shift)
+    NTMET theSmearedMet_ = getSmearedMET(jetResFactor);
+
+    NTMET thePhiCorrectedSmearedMet_ = theSmearedMet_;
+
+    int Nvtx = GetVertex().size();
+
+    float metx = theSmearedMet_.p2.Px();
+    float mety = theSmearedMet_.p2.Py();
+
+    float metx_phiCorr = 0.0;
+    float mety_phiCorr = 0.0;
+
+
+// Figures taken from the github repository "pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_" + "mc" (Summer12)  or "data"(ReReco)
+    // MC corrections
+    if (!runningOnData)
+    {
+        metx_phiCorr = metx - (+1.62861e-01 - 2.38517e-02*Nvtx);
+        mety_phiCorr = mety - (+3.60860e-01 - 1.30335e-01*Nvtx);
+    }
+    // Data corrections
+    else if (runningOnData)
+    {
+        metx_phiCorr = metx - (+4.83642e-02 + 2.48870e-01*Nvtx);
+        mety_phiCorr = mety - (-1.50135e-01 - 8.27917e-02*Nvtx);
+    }
+
+    thePhiCorrectedSmearedMet_.p2.Set(metx_phiCorr,mety_phiCorr);
+
+    return thePhiCorrectedSmearedMet_;
+}
+
+NTMET MyMonotopSkim::getPhiCorrectedMET(bool runningOnData) 
+{
+    // To correct the MET in the Phi direction (xy shift)
+    NTMET theMet_ = rawMET;
+
+    NTMET thePhiCorrectedMet_ = theMet_;
+
+    int Nvtx = GetVertex().size();
+
+    float metx = theMet_.p2.Px();
+    float mety = theMet_.p2.Py();
+
+    float metx_phiCorr = 0.0;
+    float mety_phiCorr = 0.0;
+
+
+// Figures taken from the github repository "pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_" + "mc" (Summer12)  or "data"(ReReco)
+    // MC corrections
+    if (!runningOnData)
+    {
+        metx_phiCorr = metx - (+1.62861e-01 - 2.38517e-02*Nvtx);
+        mety_phiCorr = mety - (+3.60860e-01 - 1.30335e-01*Nvtx);
+    }
+    // Data corrections
+    else if (runningOnData)
+    {
+        metx_phiCorr = metx - (+4.83642e-02 + 2.48870e-01*Nvtx);
+        mety_phiCorr = mety - (-1.50135e-01 - 8.27917e-02*Nvtx);
+    }
+
+    thePhiCorrectedMet_.p2.Set(metx_phiCorr,mety_phiCorr);
+
+    return thePhiCorrectedMet_;
+}
+
+
+
+

@@ -9,7 +9,7 @@ DEFINES       =
 
 CXX           = g++
 CXXFLAGS      = -O -Wall -fPIC $(DEFINES) -Wno-unused-result
-CXXFLAGS      += $(ROOTCFLAGS) -I./ -I../../ -I../../../../IPHCDataFormat
+CXXFLAGS      += $(ROOTCFLAGS) -I./ -I../../../ -I../../ -I../../../../../IPHCDataFormat
 
 LD            = g++
 LDFLAGS       = -g -O -Wall -fPIC -Wl,--no-undefined
@@ -50,8 +50,8 @@ clean:
 
 #------------------------------------------------------------------------------
 
-	../.vectorDictionnary_C.so: ../.vectorDictionnary.C
-	cd ..; root -q -l -L .vectorDictionnary.C+
+#	../.vectorDictionnary_C.so: ../.vectorDictionnary.C
+#	cd ..; root -q -l -L .vectorDictionnary.C+
 
 $(DEFAULT_TARGET): $(DEFAULT_TARGET).$(SrcSuf)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $< $(LIBS) $(GCCPARSER)

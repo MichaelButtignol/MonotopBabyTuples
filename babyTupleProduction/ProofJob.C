@@ -37,7 +37,7 @@ ProofJob::ProofJob()
   hnjets_afterCut     = new TH1D("hnjets_afterCut"    , "hnjets_afterCut"    , 10 , -0.5 , 9.5 );
   hnBjets_beforeCut   = new TH1D("hnBjets_beforeCut"  , "hnBjets_beforeCut"  , 5  , -0.5 , 4.5 );
   hnBjets_afterCut    = new TH1D("hnBjets_afterCut"   , "hnBjets_afterCut"   , 5  , -0.5 , 4.5 );
-  hMuonIso_beforeCut  = new TH1D("hMuonIso_beforeCut" , "hMuonIso_beforeCut" , 150, -0.01, 2.99);
+  hMuonIso_beforeCut  = new TH1D("hMuonIso_beforeCut" , "hMuonIso_beforeCut" , 21, -0.005, 0.0205);
 
   monotopMCinfo = new MonotopMCinfo();
 }

@@ -28,15 +28,12 @@ class MonotopMCinfo
 
  //Add accessors to the objects
  vector<IPHCTree::NTGenParticle*> GetInvisibles() { return invisible_; }
- vector<IPHCTree::NTGenParticle*> GetResonants() { return resonant_; }
- vector<IPHCTree::NTGenParticle*> GetWs() { return W_; }
- vector<IPHCTree::NTGenParticle*> GetHadronicWs() { return HadronicW_; }
- vector<IPHCTree::NTGenParticle*> GetTops() { return top_; }
- vector<IPHCTree::NTGenParticle*> GetHadronicTops() { return HadronicTop_; }
- vector<IPHCTree::NTGenParticle*> GetLeptonsFromW() { return lepton_; }
- vector<IPHCTree::NTGenParticle*> GetNeutrinosFromW() { return neutrino_; }
- vector<IPHCTree::NTGenParticle*> GetHadronicTauFromW() { return hadronicTau_; }
- vector<IPHCTree::NTGenParticle*> GetLeptonicTauDecay() { return TauDecay_; }
+ vector<IPHCTree::NTGenParticle*> GetResonants()  { return resonant_;  }
+ vector<IPHCTree::WDecaysMC*>   GetWs()           { return WtoLNU_;    }
+ vector<IPHCTree::ZDecaysMC*>   GetZs()           { return ZtoLL_;     }
+ vector<IPHCTree::TopDecaysMC*> GetTops()         { return top_;       }
+// vector<IPHCTree::NTGenParticle*> GetLeptonsFromW() { return lepton_; }
+// vector<IPHCTree::NTGenParticle*> GetNeutrinosFromW() { return neutrino_; }
 
  private:
 
@@ -51,14 +48,11 @@ class MonotopMCinfo
   // List of particles
   vector<IPHCTree::NTGenParticle*> invisible_;
   vector<IPHCTree::NTGenParticle*> resonant_;
-  vector<IPHCTree::NTGenParticle*> top_;
-  vector<IPHCTree::NTGenParticle*> HadronicTop_;
-  vector<IPHCTree::NTGenParticle*> W_;
-  vector<IPHCTree::NTGenParticle*> HadronicW_;
-  vector<IPHCTree::NTGenParticle*> lepton_;
-  vector<IPHCTree::NTGenParticle*> neutrino_;
-  vector<IPHCTree::NTGenParticle*> hadronicTau_;
-  vector<IPHCTree::NTGenParticle*> TauDecay_;
+  vector<IPHCTree::TopDecaysMC*> top_;
+  vector<IPHCTree::WDecaysMC*> WtoLNU_;
+  vector<IPHCTree::ZDecaysMC*> ZtoLL_;
+//  vector<IPHCTree::NTGenParticle*> lepton_;
+//  vector<IPHCTree::NTGenParticle*> neutrino_;
 
 
 };
